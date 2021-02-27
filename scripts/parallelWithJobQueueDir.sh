@@ -7,8 +7,8 @@ echo "" > test-output
 
 while [ true ]
 do
-	files=''
 	files=$(ls $jobQueuePath)
+	paths=$(echo $files | xargs -I{} -d " " echo "$jobQueuePath/{}")
 
 	# for file in $files
 	# do
@@ -18,11 +18,12 @@ do
 	# echo content of files
 	# echo $files >> test-output 
 	
-	# TODO echo paths of files that will eventually be executed
-		# TODO have arguements list be list of $jobQueuePath/$files[n], I'm not thinking about this right
-	parallel -d " " echo ::: "$jobQueuePath/" ::: $(echo -n $files)
+	# echo paths of files that will eventually be executed
+	parallel -d " " --no-run-if-empty echo >> test-output ::: $paths
+
+	# TODO feed parallel all the files so that it executes them
 	
 	sleep 5 # seconds
 done
 
-# TODO feed parallel all the files so that it reads and executes them in parallel
+# TODO Have parallel process individual job (with another parallel process?)
