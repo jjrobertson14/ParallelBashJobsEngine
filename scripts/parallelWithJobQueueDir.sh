@@ -9,14 +9,17 @@ while [ true ]
 do
 	files=''
 	files=$(ls $jobQueuePath)
-	echo $files >> test-output 
-	# TODO give files contents
-	# TODO echo content of files
-	# parallel sh :::: $files 
+
 	# for file in $files
 	# do
 		# echo $file && rm ./jobqueue/$file || echo "failed to process file $(file)"
 	# done
+
+	# echo content of files
+	# echo $files >> test-output 
+	
+	parallel -d " " echo ::: $files 
+	
 	sleep 5 # seconds
 done
 
