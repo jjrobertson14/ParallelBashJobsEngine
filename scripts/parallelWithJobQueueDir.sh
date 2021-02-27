@@ -19,9 +19,10 @@ do
 	# echo $files >> test-output 
 	
 	# echo paths of files that will eventually be executed
-	parallel -d " " --no-run-if-empty echo >> test-output ::: $paths
+	# parallel -d " " --no-run-if-empty echo >> test-output ::: $paths
 
-	# TODO feed parallel all the files so that it executes them
+	# feed parallel the paths of the files in the job queue so that it executes them
+	parallel -d " " --no-run-if-empty sh >> test-output ::: $paths
 	
 	sleep 5 # seconds
 done
