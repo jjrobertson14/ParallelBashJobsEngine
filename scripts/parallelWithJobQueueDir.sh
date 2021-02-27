@@ -21,9 +21,9 @@ do
 	# echo paths of files that will eventually be executed
 	# parallel -d " " --no-run-if-empty echo >> test-output ::: $paths
 
-	# feed parallel the paths of the files in the job queue so that it executes them
-	parallel -d " " --no-run-if-empty sh >> test-output ::: $paths
-	
+	# feed parallel the paths of the files in the job queue so that it executes them, and then remove each file that ran successfully
+	echo $paths | parallel -d " " --no-run-if-empty 'sh {} >> test-output && rm {} || echo "failed to process file {}"'
+
 	sleep 5 # seconds
 done
 
