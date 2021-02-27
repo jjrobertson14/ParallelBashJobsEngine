@@ -18,11 +18,11 @@ do
 	# echo content of files
 	# echo $files >> test-output 
 	
-	parallel -d " " echo ::: $files 
+	# TODO echo paths of files that will eventually be executed
+		# TODO have arguements list be list of $jobQueuePath/$files[n], I'm not thinking about this right
+	parallel -d " " echo ::: "$jobQueuePath/" ::: $(echo -n $files)
 	
 	sleep 5 # seconds
 done
-
-# TODO collect file names to supply to parallel
 
 # TODO feed parallel all the files so that it reads and executes them in parallel
