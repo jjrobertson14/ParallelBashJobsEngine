@@ -1,15 +1,18 @@
 #!/bin/bash
 
+jobQueuePath="../jobqueue"
+
+# DEBUG
 echo "" > test-output
 
 while [ true ]
 do
 	files=''
-	files=$(ls ./jobqueue)
-	echo $files > test-output 
+	files=$(ls $jobQueuePath)
+	echo $files >> test-output 
 	# TODO give files contents
 	# TODO echo content of files
-	parallel sh :::: $files 
+	# parallel sh :::: $files 
 	# for file in $files
 	# do
 		# echo $file && rm ./jobqueue/$file || echo "failed to process file $(file)"

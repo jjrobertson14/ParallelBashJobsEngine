@@ -1,6 +1,8 @@
 #!/bin/bash
 
-echo true > jobqueue; tail -n+0 -f jobqueue | parallel &
+jobQueuePath="../jobqueue"
+
+echo true > jobqueue; tail -n+0 -f $jobQueuePath | parallel &
 echo 'echo a > output' >> jobqueue
 echo 'echo b > output' >> jobqueue
 echo 'echo c > output' >> jobqueue
