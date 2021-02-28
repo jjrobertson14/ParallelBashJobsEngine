@@ -27,4 +27,4 @@ do
 	sleep 5 # seconds
 done
 
-# TODO Have parallel process individual job (with another parallel process?)
+# TODO Have parallel process individual job (with another parallel process?) (based on filename?)
