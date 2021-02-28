@@ -44,11 +44,11 @@ do
 
 	# feed parallel the paths of the files in the job queue so that it executes them, and then remove each file that ran successfully
 	echo $paths
-	# TODO fix bug where file 9 cannot be executed 'bash: ../jobqueue/9 : No such file or directory'
+	# TODO fix bug where file 9 cannot be executed (it's the last file processed) 'bash: ../jobqueue/9 : No such file or directory'
 	echo $paths | parallel -j1 -d " " --no-run-if-empty \
-					'bash {} >> test-output && rm {} || echo "failed to process file {}"'
+					'bash {} >> test-output && rm {} && echo processed {} || echo "failed to process file {}"'
 
-	sleep 2 # seconds
+	sleep 20 # seconds
 	reset_n_test_echo_scripts_no_exit 30
 done
 
