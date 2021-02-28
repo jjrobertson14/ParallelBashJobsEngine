@@ -6,16 +6,25 @@ jobQueuePath="../jobqueue"
 # DEBUG instrumentation
 echo "" > test-output
 reset_n_test_echo_scripts() {
-    find $jobQueuePath -type f -exec rm {} \;
-	echo "KILL SIGNAL RECIVED - resetting $1 test echo scripts"
+    ls $jobQueuePath | parallel --no-run-if-empty -m -d " " -I{} echo "$jobQueuePath/{}"
+	echo "INFO - resetting test echo scripts"
 	seq 1 $1 | parallel "touch $jobQueuePath/{}"
 	seq 1 $1 | parallel "echo echo {} > $jobQueuePath/{}"
-	exit 0
+	exit 0;
 }
 
 
 # DEBUG traps
-trap "reset_n_test_echo_scripts 30" SIGTERM SIGINT
+trap "reset_n_test_echo_scripts 30;" SIGTERM SIGINT
+
+# functions
+reset_n_test_echo_scripts_no_exit() {
+    ls $jobQueuePath | parallel --no-run-if-empty -m -d " " -I{} echo "$jobQueuePath/{}"
+	echo "INFO - resetting test echo scripts"
+	seq 1 $1 | parallel "touch $jobQueuePath/{}"
+	seq 1 $1 | parallel "echo echo {} > $jobQueuePath/{}"
+}
+
 
 while [ true ]
 do
@@ -34,11 +43,12 @@ do
 	# parallel -d " " --no-run-if-empty echo >> test-output ::: $paths
 
 	# feed parallel the paths of the files in the job queue so that it executes them, and then remove each file that ran successfully
-	echo $paths | parallel -jN+0 -d " " --no-run-if-empty \
-					'sh {} >> test-output && rm {} || echo "failed to process file {}"'
+	echo $paths
+	echo $paths | parallel -j1 -d " " --no-run-if-empty \
+					'bash {} >> test-output && rm {} || echo "failed to process file {}"'
 
 	sleep 2 # seconds
-	bash "reset_n_test_echo_scripts 30"
+	reset_n_test_echo_scripts_no_exit 30
 done
 
 # TODO Have parallel process individual job (with another parallel process?) (based on filename?)
