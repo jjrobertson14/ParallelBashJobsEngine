@@ -45,9 +45,10 @@ do
 	# feed parallel the paths of the files in the job queue so that it executes them, and then remove each file that ran successfully
 	echo $paths
 	echo -n $paths | parallel -j2 -d " " --no-run-if-empty \
-					'bash {} >> test-output && rm {} && echo processed {} || echo "failed to process file {}"'
+					'bash {} >> test-output && rm {} || echo "failed to process file {}"'
+					# 'bash {} >> test-output && rm {} && echo processed {} || echo "failed to process file {}"'
 
-	sleep 2 # seconds
+	sleep 10 # seconds
 	reset_n_test_echo_scripts_no_exit 30
 done
 
