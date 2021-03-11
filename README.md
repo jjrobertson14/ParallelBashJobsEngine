@@ -7,7 +7,10 @@ An engine to run linux commands in parallel via GNU parallel.
 
 - 2021-03-10 Now have sedSample.sh script to test with, it takes a few seconds for each sed in the script to run
     - So, given this, I want to run sed in multiple jobs via parallel by submitting one file to the jobqueue
-        - Perhaps have sedSample.sh output commands to be run through parallel?
+        - Perhaps have sedSample.sh output commands to be run through parallel? 
+            - Have user submit jobs that output commands if they want to use that functionality
+            - And in this case file name could include information about how to use parallel
+                - ! Try this?
         - Perhaps
         - Perhaps
         - Perhaps
