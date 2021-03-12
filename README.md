@@ -9,8 +9,9 @@ An engine to run linux commands in parallel via GNU parallel.
     - So, given this, I want to run sed in multiple jobs via parallel by submitting one file to the jobqueue
         - Perhaps have sedSample.sh output commands to be run through parallel? 
             - Have user submit jobs that output commands if they want to use that functionality
+                - Got this working (2021-03-11)
             - And in this case file name could include information about how to use parallel
                 - ! Try this?
-        - Perhaps
-        - Perhaps
-        - Perhaps
+
+! Try out having a token to echo at start of each command to run? 
+    - That way the jobs scripts can output whatever is wanted, but still send commands via standard out
