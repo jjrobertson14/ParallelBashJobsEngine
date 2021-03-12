@@ -15,3 +15,4 @@ An engine to run linux commands in parallel via GNU parallel.
 
 ! Try out having a token to echo at start of each command to run? 
     - That way the jobs scripts can output whatever is wanted, but still send commands via standard out
+        - (could use tee to send all output of job script somewhere to preserve non-command output of the script)
