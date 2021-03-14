@@ -3,3 +3,4 @@ test-error
 scripts/output
 input/
 output/
+scripts/test-command-output
