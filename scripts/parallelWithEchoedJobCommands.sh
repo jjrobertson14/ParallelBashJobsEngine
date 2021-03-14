@@ -30,7 +30,7 @@ do
 	# (with another parallel process) 
 	# (removing each file that runs successfully)
 	echo -n $paths | parallel -j2 -d " " --no-run-if-empty \
-					'bash {} | parallel -I___ -j6 bash -c ___ >> test-output && rm {} || echo "failed to process file {}"'
+					'bash {} | parallel -I___ -j6 bash -c ___ >> test-command-output && rm {} || echo "failed to process file {}"'
 
 	sleep 10 # seconds
 done
