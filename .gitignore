@@ -4,3 +4,5 @@ scripts/output
 input/
 output/
 scripts/test-command-output
+archive/
+error/
