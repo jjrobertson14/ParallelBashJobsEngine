@@ -33,7 +33,8 @@ do
 	# (with another parallel process) 
 	# (removing each file that runs successfully)
 	echo -n $paths | parallel -j2 -d " " --no-run-if-empty \
-					'bash {} || mv {} ../error | parallel -I___ -j6 "bash -c ___ >> test-command-output"' 
+					# 'bash {} || mv {} ../error | parallel -I___ -j6 "bash -c ___ >> test-command-output || mv {} ../error"' 
+					# 'bash {} | parallel -I___ -j6 "bash -c ___ >> test-command-output || mv {} ../error"' 
 	# mv $paths ../archive/
 
 	sleep 1 # seconds
