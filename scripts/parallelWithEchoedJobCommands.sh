@@ -5,6 +5,7 @@ jobQueuePath="../jobqueue-for-jobs-that-echo-commands"
 
 # DEBUG instrumentation
 echo "" > test-output
+rm -f ../error/* ../archive/*
 
 # DEBUG traps
 # trap "reset_n_test_echo_scripts 30;" SIGTERM SIGINT
@@ -33,9 +34,15 @@ do
 	# (with another parallel process) 
 	# (removing each file that runs successfully)
 	echo -n $paths | parallel -j2 -d " " --no-run-if-empty \
-					# 'bash {} || mv {} ../error | parallel -I___ -j6 "bash -c ___ >> test-command-output || mv {} ../error"' 
-					# 'bash {} | parallel -I___ -j6 "bash -c ___ >> test-command-output || mv {} ../error"' 
-	# mv $paths ../archive/
+					'bash {} || mv {} ../error | parallel -I___ -j6 "bash -c ___ >> test-command-output || mv {} ../error"' 
+	
+	for path in $paths
+	do
+		if [ ! -z "$path" ] && [ -f "$path" ]
+		then
+			mv $path ../archive/
+		fi
+	done
 
 	sleep 1 # seconds
 done
