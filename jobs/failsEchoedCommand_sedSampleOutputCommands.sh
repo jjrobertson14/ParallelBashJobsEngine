@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e
 
 echo "cat fakie"
 echo "sed -n 's/g/fox/p' ../input/sample.txt > ../output/g-to-fox-sample-1.txt && echo ran sed 1 time"
