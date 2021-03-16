@@ -13,11 +13,11 @@ An engine to run linux commands in parallel via GNU parallel.
             - And in this case file name could include information about how to use parallel
                 - ! Try this?
 
-- ! [Interpreter] Try out having a token to echo at start of each command to run? 
+- ! [ lil interpreter ] Try out having a token to echo at start of each command to run? 
     - That way the jobs scripts can output whatever is wanted, but still send commands via standard out
         - (could use tee to send all output of job script somewhere to preserve non-command output of the script)
 
-- ! [archive and error folders] concatenate filename with timestamp
+- [ DONE ] [archive and error folders] concatenate filename with timestamp
 
 - ! [handle errors] of individual commands echoed by job files
 
