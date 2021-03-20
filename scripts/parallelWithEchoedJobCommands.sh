@@ -40,8 +40,7 @@ do
 	# processFileCommand='bash {} || mv {} ../error/$(echo {} |cut -d"/" -f3 |cut -d"." -f1)_$(date +%Y%m%d-%H:%M:%S.%s) | parallel -I___ -j6 "bash -c ___ >> command-output || echo $(echo {} |cut -d"/" -f3 |cut -d"." -f1)_$(date +%Y%m%d-%H:%M:%S.%s) ___ >> ../error/command-error"'	
 	echo -n $jobFilePaths | parallel -j2 -d " " --no-run-if-empty \
 		${processFileCommand}
-		# TODO get writing to command-error working, 
-			# I'm pretty sure it should be written to when I run the failsEchoedCommand_sedSampleOutputCommands.sh script
+		# TODO add moving file to error back again somehow so that it works (commented out processFileCommand includes the mv that seems to break syntax of rest of line)
 		# TODO make pretty
 			# (maybe break apart string into multiple variables you concatenate, with names of variables clearly indicating what each step is doing)
 
