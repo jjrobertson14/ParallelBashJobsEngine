@@ -7,3 +7,5 @@ scripts/command-output
 scripts/command-error
 archive/
 error/
+jobqueue/
+jobqueue-for-jobs-that-echo-commands/
