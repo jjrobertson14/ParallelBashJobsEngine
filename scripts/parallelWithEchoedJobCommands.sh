@@ -4,7 +4,7 @@
 jobQueuePath="../jobqueue-for-jobs-that-echo-commands"
 
 # DEBUG instrumentation
-rm test-output
+rm -f test-output
 # rm -f ../error/* ../archive/* 
 
 # DEBUG traps
@@ -33,16 +33,16 @@ do
 		# (moving each file fails to run successfully to error dir)
 		# (writing each command echoed by a job script file that fails to run successfully to command-error file)
 	echo -n $jobFilePaths | parallel -j2 -d " " --no-run-if-empty \
-		'bash {} || mv {} ../error/$(date +%s%N)_$(echo {} | cut -d"/" -f2) | parallel -I___ -j6 "bash -c ___ >> command-output || echo ___ >> command-error"' 
+		'bash {} || echo {} ../error/$(date +%s%N) | parallel -I___ -j6 "bash -c ___ >> command-output || mv ../jobqueue-for-jobs-that-echo-commands/failsEchoedCommand_sedSampleOutputCommands.sh ../error/"'
 		# 'bash {} || echo {} ../error/$(date +%s%N)_ | parallel -I___ -j6 "bash -c ___ >> command-output || mv {} ../error"' 
 	
-	for jobfilename in $jobFileNames
-	do
-		if [ ! -z "$jobQueuePath/$jobfilename" ] && [ -f "$jobQueuePath/$jobfilename" ]
-		then
-			mv "$jobQueuePath/$jobfilename" ../archive/$(date +%s%N)_$jobfilename
-		fi
-	done
+	# for jobfilename in $jobFileNames
+	# do
+	# 	if [ ! -z "$jobQueuePath/$jobfilename" ] && [ -f "$jobQueuePath/$jobfilename" ]
+	# 	then
+	# 		mv "$jobQueuePath/$jobfilename" ../archive/$(date +%s%N)_$jobfilename
+	# 	fi
+	# done
 
 	sleep 1 # seconds
 done
