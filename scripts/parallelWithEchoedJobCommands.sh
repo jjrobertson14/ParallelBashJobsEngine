@@ -3,6 +3,7 @@
 # fields
 jobQueuePath="../jobqueue-for-jobs-that-echo-commands"
 dateStampFmt="+%Y%m%d-%H:%M:%S.%s" # use like `date $dateStampFmt`
+# TODO add param for optimal job/core counts for parallel calls
 
 # DEBUG instrumentation
 rm -f test-output
@@ -36,7 +37,8 @@ do
 		# (moving each file fails to run successfully to error dir)
 		# (writing each command echoed by a job script file that fails to run successfully to command-error file)
 	echo -n $jobFilePaths | parallel -j2 -d " " --no-run-if-empty \
-		# TODO make pretty
+		# TODO make pretty 
+		# (maybe break apart string into multiple variables you concatenate, with names of variables clearly indicating what each step is doing)
 		'bash {} || mv {} ../error/$(echo {} |cut -d"/" -f3 |cut -d"." -f1)_$(date +%Y%m%d-%H:%M:%S.%s) | parallel -I___ -j6 "bash -c ___ >> command-output || echo $(echo {} |cut -d"/" -f3 |cut -d"." -f1)_$(date +%Y%m%d-%H:%M:%S.%s) ___ >> ../error/command-error"'
 	
 	for jobfilename in $jobFileNames
