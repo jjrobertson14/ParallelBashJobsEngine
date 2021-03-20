@@ -23,6 +23,7 @@ do
 					|| echo "failed to create var jobFilePaths" >> test-error
 	if [ -z $jobFileNames ] || [ -z $jobFilePaths ]
 	then
+		sleep 1 # seconds
 		continue
 	else
 		echo $jobFileNames >> test-output
