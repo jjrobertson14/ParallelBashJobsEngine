@@ -36,11 +36,10 @@ do
 	# (moving each file that runs successfully to archive dir)
 		# (moving each file fails to run successfully to error dir)
 		# (writing each command echoed by a job script file that fails to run successfully to command-error file)
-	processFileCommand='bash {} || mv {} ../error/$(echo {} |cut -d"/" -f3 |cut -d"." -f1)_$(date +%Y%m%d-%H:%M:%S.%s) | parallel -I___ -j6 "bash -c ___ >> command-output || echo $(echo {} |cut -d"/" -f3 |cut -d"." -f1)_$(date +%Y%m%d-%H:%M:%S.%s) ___ >> ../error/command-error"'	
+	processFileCommand='bash {} | parallel -I___ -j6 "bash -c ___ >> command-output || echo $(echo {} |cut -d"/" -f3 |cut -d"." -f1)_$(date +%Y%m%d-%H:%M:%S.%s) ___ >> ../error/command-error"'	
+	# processFileCommand='bash {} || mv {} ../error/$(echo {} |cut -d"/" -f3 |cut -d"." -f1)_$(date +%Y%m%d-%H:%M:%S.%s) | parallel -I___ -j6 "bash -c ___ >> command-output || echo $(echo {} |cut -d"/" -f3 |cut -d"." -f1)_$(date +%Y%m%d-%H:%M:%S.%s) ___ >> ../error/command-error"'	
 	echo -n $jobFilePaths | parallel -j2 -d " " --no-run-if-empty \
 		${processFileCommand}
-		# TODO get writing to command-out working, it looks like the sed commands aren't running 
-			# (see modified times of files in output directory)
 		# TODO get writing to command-error working, 
 			# I'm pretty sure it should be written to when I run the failsEchoedCommand_sedSampleOutputCommands.sh script
 		# TODO make pretty
