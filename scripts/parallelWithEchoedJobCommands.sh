@@ -36,16 +36,19 @@ do
 		# (moving each file fails to run successfully to error dir)
 		# (writing each command echoed by a job script file that fails to run successfully to command-error file)
 	echo -n $jobFilePaths | parallel -j2 -d " " --no-run-if-empty \
-		'bash {} || mv {} ../error/$(echo {} |cut -d"/" -f3 |cut -d"." -f1)_$(date +%Y%m%d-%H:%M:%S.%s) | parallel -I___ -j6 "bash -c ___ >> command-output || echo ___ >> ../error/command-error"'
+		'bash {} || mv {} ../error/$(echo {} |cut -d"/" -f3 |cut -d"." -f1)_$(date +%Y%m%d-%H:%M:%S.%s) | parallel -I___ -j6 "bash -c ___ >> command-output || echo $(echo {} |cut -d"/" -f3 |cut -d"." -f1)_$(date +%Y%m%d-%H:%M:%S.%s) ___ >> ../error/command-error"'
 		# 'bash {} || echo {} ../error/$(date +%s%N)_ | parallel -I___ -j6 "bash -c ___ >> command-output || mv {} ../error"' 
 	
-	# for jobfilename in $jobFileNames
-	# do
-	# 	if [ ! -z "$jobQueuePath/$jobfilename" ] && [ -f "$jobQueuePath/$jobfilename" ]
-	# 	then
-	# 		mv "$jobQueuePath/$jobfilename" ../archive/$(date +%s%N)_$jobfilename
-	# 	fi
-	# done
+	for jobfilename in $jobFileNames
+	do
+		if [ ! -z "$jobQueuePath/$jobfilename" ] && [ -f "$jobQueuePath/$jobfilename" ]
+		then
+			dateTimestamp=$(date +%Y%m%d-%H:%M:%S.%s)
+			archiveFilePath="../archive/${jobfilename}_${dateTimestamp}"
+			mv "$jobQueuePath/$jobfilename" "$archiveFilePath"
+			chmod 664 "$archiveFilePath"
+		fi
+	done
 
 	sleep 1 # seconds
 done
