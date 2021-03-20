@@ -3,6 +3,7 @@ test-error
 scripts/output
 input/
 output/
-scripts/test-command-output
+scripts/command-output
+scripts/command-error
 archive/
 error/
