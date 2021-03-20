@@ -15,26 +15,26 @@ mkdir -p ../archive ../error ../output ../input
 while [ true ]
 do
 	files=$(ls $jobQueuePath)
-	paths=$(echo -n $files | xargs --no-run-if-empty -I{} -d " " echo "$jobQueuePath/{}")
+	jobFileNames=$(echo -n $files | xargs --no-run-if-empty -I{} -d " " echo "{}")
 
 	# for file in $files
 	# do
 		# echo $file && rm ./jobqueue/$file || echo "failed to process file $(file)"
 	# done
 
-	echo $paths > command-output
+	echo $jobFileNames > command-output
 	# Have parallel process commands sent as output from job scripts 
 	# (with another parallel process) 
 	# (removing each file that runs successfully)
-	echo -n $paths | parallel -j2 -d " " --no-run-if-empty \
+	# echo -n $jobFileNames | parallel -j2 -d " " --no-run-if-empty \
 					# 'bash {} || mv {} ../error | parallel -I___ -j6 "bash -c ___ >> command-output || echo ___ >> command-error"' 
-					'bash {} || mv {} ../error | parallel -I___ -j6 "bash -c ___ >> command-output || mv {} ../error"' 
+					# 'bash {} || echo {} ../error/$(date +%s%N)_ | parallel -I___ -j6 "bash -c ___ >> command-output || mv {} ../error"' 
 	
-	for path in $paths
+	for jobfilename in $jobFileNames
 	do
-		if [ ! -z "$path" ] && [ -f "$path" ]
+		if [ ! -z "$jobQueuePath/$jobfilename" ] && [ -f "$jobQueuePath/$jobfilename" ]
 		then
-			mv $path ../archive/
+			mv "$jobQueuePath/$jobfilename" ../archive/$(date +%s%N)_$jobfilename
 		fi
 	done
 
