@@ -6,7 +6,7 @@ dateStampFmt="+%Y%m%d-%H:%M:%S.%s" # use like `date $dateStampFmt`
 # TODO add param for optimal job/core counts for parallel calls
 
 # DEBUG instrumentation
-rm -f test-output
+rm -f test-output test-error
 # rm -f ../error/* ../archive/* 
 
 # DEBUG traps
@@ -18,9 +18,9 @@ mkdir -p ../archive ../error ../output ../input
 while [ true ]
 do
 	jobFileNames=$(ls $jobQueuePath) \
-					|| echo "failed to create var jobFileName" >> test-output
+					|| echo "failed to create var jobFileName" >> test-error
 	jobFilePaths=$(echo -n $jobFileNames | xargs --no-run-if-empty -I{} -d " " echo "$jobQueuePath/{}") \
-					|| echo "failed to create var jobFilePaths" >> test-output
+					|| echo "failed to create var jobFilePaths" >> test-error
 	if [ -z $jobFileNames ] || [ -z $jobFilePaths ]
 	then
 		continue
