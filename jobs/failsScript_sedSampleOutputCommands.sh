@@ -2,7 +2,6 @@
 set -e
 
 cat fakie
-echo "cat fakie"
 echo "sed -n 's/g/fox/p' ../input/sample.txt > ../output/g-to-fox-sample-1.txt && echo ran sed 1 time"
 echo "sed -n 's/g/fox/p' ../input/sample.txt > ../output/g-to-fox-sample-2.txt && echo ran sed 2 times"
 echo "sed -n 's/g/fox/p' ../input/sample.txt > ../output/g-to-fox-sample-3.txt && echo ran sed 3 times"
