@@ -17,6 +17,7 @@ mkdir -p ../archive ../error ../output ../input
 
 while [ true ]
 do
+	# Set variables, looking for job scripts to run
 	jobFileNames=$(ls $jobQueuePath) \
 					|| echo "failed to create var jobFileName" >> test-error
 	jobFilePaths=$(echo -n $jobFileNames | xargs --no-run-if-empty -I{} -d " " echo "$jobQueuePath/{}") \
@@ -31,20 +32,24 @@ do
 	fi
 	echo -n $jobFilePaths |xargs -I{} chmod +x {}
 
-	# Have parallel process commands sent as output from job scripts 
-	# (with another parallel process) 
-	# (moving each file that runs successfully to archive dir)
+	# [ BEGIN COMMAND STRING COMPONENTS ]
+		# Run job script and take output as commands to run via parallel
 		# (moving each file fails to run successfully to error dir)
+	cGetCommandsFromJobScript='( bash {} || mv {} ../error/$(echo {} |cut -d"/" -f3 |cut -d"." -f1)_$(date +%Y%m%d-%H:%M:%S.%s) )'
+		# Have parallel process commands sent as output from job scripts 
 		# (writing each command echoed by a job script file that fails to run successfully to command-error file)
-	processFileCommand='( bash {} || mv {} ../error/$(echo {} |cut -d"/" -f3 |cut -d"." -f1)_$(date +%Y%m%d-%H:%M:%S.%s) ) | parallel -I___ -j6 "bash -c ___ >> command-output || echo $(echo {} |cut -d"/" -f3 |cut -d"." -f1)_$(date +%Y%m%d-%H:%M:%S.%s) ___ >> ../error/command-error"'	
-	echo -n $jobFilePaths | parallel -j2 -d " " --no-run-if-empty \
-		${processFileCommand}
-		# TODO make pretty
-			# (maybe break apart string into multiple variables you concatenate, with names of variables clearly indicating what each step is doing)
-
+	cRunJobCommands='parallel -I___ -j6 "bash -c ___ >> command-output || echo $(echo {} |cut -d"/" -f3 |cut -d"." -f1)_$(date +%Y%m%d-%H:%M:%S.%s) ___ >> ../error/command-error"'
+	# [ END COMMAND STRING COMPONENTS ]
 	
+	# [RUN PARALLEL] 
+	# Pass each job to parallel process that runs subcommands
+	echo -n $jobFilePaths | parallel -j2 -d " " --no-run-if-empty \
+		"${cGetCommandsFromJobScript} | ${cRunJobCommands}"
+	
+	# [ARCHIVE]
 	for jobfilename in $jobFileNames
 	do
+		# Move each file that ran successfully (i.e. was not moved to error directory) to archive dir
 		if [ ! -z "$jobQueuePath/$jobfilename" ] && [ -f "$jobQueuePath/$jobfilename" ]
 		then
 			dateTimestamp=$(date +%Y%m%d-%H:%M:%S.%s)
