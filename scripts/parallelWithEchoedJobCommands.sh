@@ -42,7 +42,7 @@ do
 	cGrepActualCommandsByToken='( grep -oP "(?<=^_-_-_COMMAND-).*" )'
 		# Have parallel process commands sent as output from job scripts 
 		# (writing each command echoed by a job script file that fails to run successfully to command-error file)
-	cRunJobCommands='( parallel -I___ -j6 "bash -c ___ >> command-output || echo $(echo {} |cut -d"/" -f3 |cut -d"." -f1)_$(date +%Y%m%d-%H:%M:%S.%s) ___ >> ../error/command-error" )'
+	cRunJobCommands='( parallel -I___ -j6 "bash -c ___ >>command-output 2>>command-error || echo [ERROR] ___ ===== $(echo {} |cut -d"/" -f3 |cut -d"." -f1) ===== $(date +%Y%m%d-%H:%M:%S.%s) >> command-error" )'
 	# [ END COMMAND STRING COMPONENTS ]
 	
 	# [RUN PARALLEL] 
