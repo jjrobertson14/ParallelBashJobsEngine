@@ -1,4 +1,7 @@
-# ParallelBashJobsEngine
+# [ OPEN ITEMS ]
+Place any new open items/todos to work on here.
+
+# [ DONE ] ParallelBashJobsEngine
 An engine to run linux commands in parallel via GNU parallel. 
 
 - The idea is that you will run the engine, copy script files to a "queue" directory, and have them be picked up run as jobs via GNU parallel.
@@ -27,23 +30,11 @@ An engine to run linux commands in parallel via GNU parallel.
     - That way the jobs scripts can output whatever is wanted, but still send commands via standard out
         - (could use tee to send all output of job script somewhere to preserve non-command output of the script)
 
-- ! [single job script to execute & command echoing scripts] 
-    - ! Copy parallelWithEchoedJobCommands.sh to parallelBashJobsEngine.sh
-    - ! Modify to Allow engine to accept both scripts that user desires to run and scripts that echo out commands to be run
 
-
-
-
-
-! GOOD TO SHOW IT OFF
-
-
-
-
-
-
-
-
-
+- [ DONE actually :3 it will run job script files as script via parallel, any output lines not starting with _-_-_COMMAND- token will not be ran as commands ]
+                    - [DEPRECATED]
+                        - [single job script to execute & command echoing scripts] 
+                            - Copy parallelWithEchoedJobCommands.sh to parallelBashJobsEngine.sh
+                            - Modify to Allow engine to accept both scripts that user desires to run and scripts that echo out commands to be run
 # Would be Cool To Have
 - ! (cool to have) [ expand lil interpreter ] Alow it to accept more tokens
