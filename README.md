@@ -17,8 +17,11 @@ An engine to run linux commands in parallel via GNU parallel.
 
 - [ DONE ] [handle errors] of individual commands echoed by job files
 
-- [ DONE ] [ Add timestamps to error/archive files and error-output ]
+- [ DONE ] [ Add timestamps to error/archive files and command-error ]
     - [ DONE ] get outputing commands that are echoed from command script into command-error (along with timestamp and error message itself)
+
+
+    ! fix up writes to command-error to show error message too, and separate all the components
 
 - ! [ lil interpreter to interpret command separate from other output ] Try out having a token to echo at start of each command to run? 
     - That way the jobs scripts can output whatever is wanted, but still send commands via standard out
