@@ -1,40 +1,76 @@
-# [ OPEN ITEMS ]
-Place any new open items/todos to work on here.
-
-# [ DONE ] ParallelBashJobsEngine
-An engine to run linux commands in parallel via GNU parallel. 
-
-- The idea is that you will run the engine, copy script files to a "queue" directory, and have them be picked up run as jobs via GNU parallel.
-- Each supplied script should be able to be split into multiple jobs that may run on different cores.
-
-
-- 2021-03-10 Now have sedSample.sh script to test with, it takes a few seconds for each sed in the script to run
-    - So, given this, I want to run sed in multiple jobs via parallel by submitting one file to the jobqueue
-        - Perhaps have sedSample.sh output commands to be run through parallel? 
-            - Have user submit jobs that output commands if they want to use that functionality
-                - Got this working (2021-03-11)
-            - And in this case file name could include information about how to use parallel
-                - ! Try this?
-
-- [ DONE ] [archive and error folders] 
-
-- [ DONE ] [handle errors] of individual commands echoed by job files
-
-- [ DONE ] [ Add timestamps to error/archive files and command-error ]
-    - [ DONE ] get outputing commands that are echoed from command script into command-error (along with timestamp and error message itself)
+# HOW TO PERFORM EXAMPLE
+- In order to generate input/sample.txt file... 
+    - run openssl command in scripts/snippets/create-random-content-file.md
+- The parallel bash jobs engine script is scripts/parallelJobEngine.sh
+    - run 'bash [path of parallelJobEngine.sh] > output.txt' to start the engine
+    - then copy jobs from jobs directory to jobqueue directory
+        - (See jobs section in DIRECTORY DESCRIPTIONS section below for explanations of jobs)
+            - recommended for example (that utilize sample.txt file you generated with openssl):
+                - succeeds_sedSampleOutputCommands.sh
+                - failsEchoedCommand_sedSampleOutputCommands.sh
+                - failsScript_sedSampleOutputCommands.sh
 
 
-    [ DONE ] fix up writes to command-error to show error message too, and separate all the components
-
-- [ DONE ] [ lil interpreter to interpret command separate from other output ] Try out having a token to echo at start of each command to run? 
-    - That way the jobs scripts can output whatever is wanted, but still send commands via standard out
-        - (could use tee to send all output of job script somewhere to preserve non-command output of the script)
 
 
-- [ DONE actually :3 it will run job script files as script via parallel, any output lines not starting with _-_-_COMMAND- token will not be ran as commands ]
-                    - [DEPRECATED]
-                        - [single job script to execute & command echoing scripts] 
-                            - Copy parallelWithEchoedJobCommands.sh to parallelBashJobsEngine.sh
-                            - Modify to Allow engine to accept both scripts that user desires to run and scripts that echo out commands to be run
-# Would be Cool To Have
-- ! (cool to have) [ expand lil interpreter ] Alow it to accept more tokens
+# HOW TO USE
+- run scripts/parallelJobEngine.sh (for example, like `bash scripts/parallelJobEngine.sh > output`)
+    - (parallelWithTailDashF.sh may be played around with to help you get a feel for parallel if so desired)
+- Then drop job files in jobqueue/ directory
+    - Each job file will be ran with a bash process started via parallel 
+        - (with up to 2 simultaneous jobs, utilizing 2 cores, at time of writing this, see -j2 flag)
+        - (standard output/error of the bash processes is redirected to standard output/error of the parallelJobEngine.sh 
+        process)
+        - (-d flag sets delimiter between arguments submitted to parallel process to specified character)
+        - Any files that fail with error code are moved to the error/ directory (with datetimestamp appended to filename)
+    - Then, any lines of output from the running of each job file starting with "_-_-_COMMAND-"...
+        - are ran as commands (well, the part of the string after "_-_-_COMMAND-" is)
+            - (with up to 6 simultaneous jobs, utilizing 6 cores, at time of writing this, see -j6 flag)
+        - standard output of the commands is appended to command-output file
+        - standard error of the commands is appended to command-error file
+            - additionally, an [ERROR] log message is written to the command-error file
+                - (showing the command that failed with error code, job file it is from, and a datetimestamp)
+    - Then, all job script files that ran successfully with no error code are moved to archive/ directory
+        - (with datetimestamp appended to filename)
+
+
+
+
+# DIRECTORY DESCRIPTIONS
+## (committed in git)
+##### jobs
+- contains example job files that may be dropped in the jobqueue/ directory
+- failsEchoedCommand_sedSampleOutputCommands.sh should run succesfully and be moved to archive directory
+            - (But if you look in command-error output file, you should see that the command 'cat fakie' failed with an error)
+            - (Though if you look at command-output, you should see messages showing that the sed commands ran succesfully)
+        - failsScript_sedSampleOutputCommands.sh should fail to run with an error and be moved to error directory
+        - succeeds_sedSampleOutputCommands.sh should run successfully and be moved to archive directory
+            - (Nothing should be written to command-error, only command-output and output.txt (and maybe test-output file))
+##### scripts
+- snippets dir contains files containing helpful bash snippets 
+- parallelJobEngine.sh is the main job engine script
+
+# (DIRECTORIES GENERATED BY PARALLEL ENGINE SCRIPT)
+##### archive
+- contains job files that were copied to jobqueue that ran succesfully via the job engine
+##### error
+- contains job files that were copied to jobqueue that ran unsucessfully via the job engine
+##### input
+- you may put input files in here 
+    - (directory is not used at time of writing this)
+##### jobqueue
+- job files are to be dropped in here
+    - the job engine watches this directory for new scripts, processes them, and moves them to either the archive/ or error/ directory
+##### output
+- you may have your jobs and job commands output to files within this directory 
+    - (directory is not used at time of writing this)
+
+# Output files Description
+- command-error
+    - contains standard error of job commands that were echoed by job script (lines starting with _-_-_COMMAND- are interpretted as commands)
+        - [ERROR] log messages are also written to here
+- command-output
+    - errors of job commands that were echoed by job script (lines starting with _-_-_COMMAND- are interpretted as commands)
+- test-output
+    - you may write any test output you want for testing/debugging purposes to this file
+    - it is removed once, every time the job engine script is started
