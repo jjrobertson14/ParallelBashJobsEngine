@@ -1,5 +1,16 @@
 #!/bin/bash
 
+# Read args
+if [ -z $1 ] && [ -z $2 ]
+then
+	echo "provide [simultaneousFilesCount, of cpu cores to process job files with] [simultaneousCommandsCount, of cpu cores to process commands from job files]"
+	echo "example: parallel 2 6"
+	exit 1
+else
+	simultaneousFilesCount=2 # of cpu cores to process job files with
+	simultaneousCommandsCount=6 # of cpu cores to process commands from job files
+fi
+
 # fields
 jobQueuePath="../jobqueue-for-jobs-that-echo-commands"
 dateStampFmt="+%Y%m%d-%H:%M:%S.%s" # use like `date $dateStampFmt`
@@ -30,24 +41,26 @@ do
 		echo $jobFileNames >> test-output
 		echo $jobFilePaths >> test-output
 	fi
-	echo -n $jobFilePaths |xargs -I{} chmod +x {}
+	echo -n $jobFilePaths |xargs -I{} chmod +x {} # set script files to executable
 
 	# [ BEGIN COMMAND STRING COMPONENTS ]
 		# Run job script and take output as commands to run via parallel
-		# (moving each file fails to run successfully to error dir)
+		# (moving each file that fails to run successfully to error dir with a datetimestamp concatenated to it)
 	cGetCommandsFromJobScript='( bash {} || mv {} ../error/$(echo {} |cut -d"/" -f3 |cut -d"." -f1)_$(date +%Y%m%d-%H:%M:%S.%s) )'
 		# In order to allow only specified output of job scripts to be ran as command, 
 			# have token "_-_-_COMMAND-" be at start of output strings client wants to run as commands
 		# (To do this, grep to select text after token "_-_-_COMMAND-" if it appears at start of piped in string)
 	cGrepActualCommandsByToken='( grep -oP "(?<=^_-_-_COMMAND-).*" )'
 		# Have parallel process commands sent as output from job scripts 
-		# (writing each command echoed by a job script file that fails to run successfully to command-error file)
-	cRunJobCommands='( parallel -I___ -j6 "bash -c ___ >>command-output 2>>command-error || echo [ERROR] ___ ===== $(echo {} |cut -d"/" -f3 |cut -d"." -f1) ===== $(date +%Y%m%d-%H:%M:%S.%s) >> command-error" )'
+		# (writing each command echoed by a job script file that fails to run successfully to command-error file, along with filename and datetimestamp)
+	cRunJobCommands_A="parallel -I___ --jobs ${simultaneousCommandsCount}"
+	cRunJobCommands_B='"bash -c ___ >>command-output 2>>command-error || echo [ERROR] ___ ===== $(echo {} |cut -d"/" -f3 |cut -d"." -f1) ===== $(date +%Y%m%d-%H:%M:%S.%s) >> command-error"'
+	cRunJobCommands="( $cRunJobCommands_A $cRunJobCommands_B )"
 	# [ END COMMAND STRING COMPONENTS ]
 	
 	# [RUN PARALLEL] 
 	# Pass each job to parallel process that runs subcommands
-	echo -n $jobFilePaths | parallel -j2 -d " " --no-run-if-empty \
+	echo -n $jobFilePaths | parallel --jobs ${simultaneousFilesCount} -d " " --no-run-if-empty \
 		"${cGetCommandsFromJobScript} | ${cGrepActualCommandsByToken} | ${cRunJobCommands}"
 	
 	# [ARCHIVE]
