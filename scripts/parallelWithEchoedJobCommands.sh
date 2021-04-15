@@ -1,20 +1,26 @@
 #!/bin/bash
 
-# Read args
-if [ -z $1 ] && [ -z $2 ]
-then
-	echo "provide [simultaneousFilesCount, of cpu cores to process job files with] [simultaneousCommandsCount, of cpu cores to process commands from job files]"
-	echo "example: parallel 2 6"
-	exit 1
-else
-	simultaneousFilesCount=2 # of cpu cores to process job files with
-	simultaneousCommandsCount=6 # of cpu cores to process commands from job files
-fi
+# Constants
+CORE_COUNT=$(getconf _NPROCESSORS_ONLN)
 
 # fields
 jobQueuePath="../jobqueue-for-jobs-that-echo-commands"
 dateStampFmt="+%Y%m%d-%H:%M:%S.%s" # use like `date $dateStampFmt`
-# TODO add param for optimal job/core counts for parallel calls
+
+# Read args
+if [ -z $1 ] # 0 arguments passed
+then
+	simultaneousFilesCount=$(if [ $CORE_COUNT -ge 1 ]; then  echo 2; else echo 1; fi) # 2, if 2 are available
+	simultaneousCommandsCount=$CORE_COUNT
+elif [ -z $2 ] # 1 argument passed
+then
+	echo "provide [simultaneousFilesCount, of cpu cores to process job files with] [simultaneousCommandsCount, of cpu cores to process commands from job files]"
+	echo "example: parallel 2 6"
+	exit 1
+else # at least 2 arguments passed
+	simultaneousFilesCount=$1
+	simultaneousCommandsCount=$2
+fi
 
 # DEBUG instrumentation
 rm -f test-output test-error
