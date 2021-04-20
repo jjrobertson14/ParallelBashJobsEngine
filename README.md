@@ -1,4 +1,11 @@
-# HOW TO PERFORM EXAMPLE
+# DESCRIPTION
+- Parallel Bash Jobs Engine can run commands in JOB FILES in parallel (using GNU parallel)
+
+- JOB FILES may be one of:
+    1. a txt file containing commands one per line
+    1. a script to run as a whole
+        - (where each line of stdout that is marked as a command with a prefix of '_-_-_COMMAND' is run in parallel)
+
 - In order to generate input/sample.txt file... 
     - run openssl command in scripts/snippets/create-random-content-file.md
 - The parallel bash jobs engine script is scripts/parallelJobEngine.sh
