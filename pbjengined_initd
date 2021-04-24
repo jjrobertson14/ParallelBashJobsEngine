@@ -34,32 +34,33 @@
 # Source function library.
 . /lib/lsb/init-functions
 
+
+# TODO
+PATH=/bin:/usr/bin:/sbin:/usr/sbin
+DAEMON=/opt/pbjengine/pbjengined
+NAME="pbjengined"
+DESC="Parallel Bash Jobs Engine can run commands in JOB FILES in parallel "
+SCRIPTNAME=/etc/init.d/"$NAME"
 PBJENGINE_HOST=`hostname`
-PBJENGINE_DIR=/opt/pbjengine/engine
-PIDFILE=$PBJENGINE_DIR/logs/pid
-STARTPIDFILE=$PBJENGINE_DIR/logs/startpid
+PIDFILE=/var/run/pbjengined.pid
 
 if [ -f /etc/pbjengined.conf ]; then
         . /etc/sysconfig/pbjengined.conf
 fi
+
+test -f $DAEMON || exit 0
+
 #===============================================================================
 
 
 
 
-#!/bin/sh
-# Start/stop the cron daemon.
-#
 
 
-PATH=/bin:/usr/bin:/sbin:/usr/sbin
-DESC="cron daemon"
-NAME=cron
-DAEMON=/usr/sbin/cron
-PIDFILE=/var/run/crond.pid
-SCRIPTNAME=/etc/init.d/"$NAME"
 
-test -f $DAEMON || exit 0
+
+
+
 
 . /lib/lsb/init-functions
 
