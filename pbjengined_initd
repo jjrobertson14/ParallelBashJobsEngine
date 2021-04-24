@@ -34,8 +34,6 @@
 # Source function library.
 . /lib/lsb/init-functions
 
-
-# TODO
 PATH=/bin:/usr/bin:/sbin:/usr/sbin
 DAEMON=/opt/pbjengine/pbjengined
 NAME="pbjengined"
@@ -45,26 +43,12 @@ PBJENGINE_HOST=`hostname`
 PIDFILE=/var/run/pbjengined.pid
 
 if [ -f /etc/pbjengined.conf ]; then
-        . /etc/sysconfig/pbjengined.conf
+        . /etc/pbjengined.conf
 fi
 
 test -f $DAEMON || exit 0
 
-#===============================================================================
-
-
-
-
-
-
-
-
-
-
-
 . /lib/lsb/init-functions
-
-
 
 #===============================================================================
 case "$1" in
