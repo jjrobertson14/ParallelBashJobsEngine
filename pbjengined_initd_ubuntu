@@ -1,0 +1,79 @@
+#!/bin/bash
+#
+#       /etc/init.d/pbjengined
+# pbjengined    This shell script takes care of starting and stopping
+#               pbjengined (Parallel Bash Jobs Engine daemon)
+#
+# Author: jjrobertson14
+#
+# description: pbjengined is the Parallel Bash Jobs Engine daemon. 
+# Parallel Bash Jobs Engine can run commands in JOB FILES in parallel (using GNU parallel)
+#
+# JOB FILES may be one of:
+#   1. a txt file containing commands one per line
+#   2. a script to run as a whole
+#      (where each line of stdout that is marked as a command with a prefix of '_-_-_COMMAND' is run in parallel)
+
+# Source function library.
+. /lib/lsb/init-functions
+
+PBJENGINE_HOST=`hostname`
+PBJENGINE_DIR=/opt/pbjengine/engine
+PIDFILE=$PBJENGINE_DIR/logs/pid
+STARTPIDFILE=$PBJENGINE_DIR/logs/startpid
+
+if [ -f /etc/pbjengined.conf ]; then
+        . /etc/sysconfig/pbjengined.conf
+fi
+
+
+start() {
+        echo -n "Starting Parallel Bash Jobs Engine: "
+        if [ -f $STARTPIDFILE ]; then
+                PID=`cat $STARTPIDFILE`
+                echo pbjengined already running: $PID
+                exit 2;
+        elif [ -f $PIDFILE ]; then
+                PID=`cat $PIDFILE`
+                echo pbjengined already running: $PID
+                exit 2;
+        else
+                cd $PBJENGINE_DIR
+                start_daemon  ./pbjengined $OPTIONS
+                RETVAL=$?
+                echo
+                [ $RETVAL -eq 0 ] && touch /var/lock/subsys/pbjengined
+                return $RETVAL
+        fi
+
+}
+
+stop() {
+        echo -n "Shutting down Parallel Bash Jobs Engine: "
+        echo
+        killproc pbjengined
+        echo
+        rm -f /var/lock/subsys/pbjengined
+        return 0
+}
+
+case "$1" in
+    start)
+        start
+        ;;
+    stop)
+        stop
+        ;;
+    status)
+        status pbjengined
+        ;;
+    restart)
+        stop
+        start
+        ;;
+    *)
+        echo "Usage:  {start|stop|status|restart}"
+        exit 1
+        ;;
+esac
+exit $?
