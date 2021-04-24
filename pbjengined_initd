@@ -15,23 +15,20 @@
 #      (where each line of stdout that is marked as a command with a prefix of '_-_-_COMMAND' is run in parallel)
 
 # Source function library.
-. /etc/init.d/functions
-
+. /lib/lsb/init-functions
 
 PBJENGINE_HOST=`hostname`
 PBJENGINE_DIR=/opt/pbjengine/engine
 PIDFILE=$PBJENGINE_DIR/logs/pid
 STARTPIDFILE=$PBJENGINE_DIR/logs/startpid
-# TODO Finish rest of modifications for pbjengined below
 
-
-if [ -f /etc/sysconfig/pbjengined ]; then
-        . /etc/sysconfig/pbjengined
+if [ -f /etc/pbjengined.conf ]; then
+        . /etc/sysconfig/pbjengined.conf
 fi
 
 
 start() {
-        echo -n "Starting Fedora Directory Server: "
+        echo -n "Starting Parallel Bash Jobs Engine: "
         if [ -f $STARTPIDFILE ]; then
                 PID=`cat $STARTPIDFILE`
                 echo pbjengined already running: $PID
@@ -42,7 +39,7 @@ start() {
                 exit 2;
         else
                 cd $PBJENGINE_DIR
-                daemon  ./pbjengined $OPTIONS
+                start_daemon  ./pbjengined $OPTIONS
                 RETVAL=$?
                 echo
                 [ $RETVAL -eq 0 ] && touch /var/lock/subsys/pbjengined
@@ -52,7 +49,7 @@ start() {
 }
 
 stop() {
-        echo -n "Shutting down Fedora Directory Server: "
+        echo -n "Shutting down Parallel Bash Jobs Engine: "
         echo
         killproc pbjengined
         echo
