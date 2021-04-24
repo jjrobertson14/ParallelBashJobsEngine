@@ -8,6 +8,8 @@
 # This shell script takes care of starting and stopping
 # pbjengined (Parallel Bash Jobs Engine daemon)
 #
+##
+#
 # Author:               jjrobertson14
 #
 # Short-Description:    pbjengined is the Parallel Bash Jobs Engine daemon
@@ -22,12 +24,12 @@
 #                        , with a prefix of '_-_-_COMMAND', is run in parallel)
 #
 # Provides:             pbjengined
-# TODO Required-Start:    $remote_fs $syslog $time
-# TODO Required-Stop:     $remote_fs $syslog $time
-# TODO Should-Start:      $network $named slapd autofs ypbind nscd nslcd winbind sssd
-# TODO Should-Stop:       $network $named slapd autofs ypbind nscd nslcd winbind sssd
-# TODO Default-Start:     2 3 4 5
-# TODO Default-Stop:
+# Required-Start:       $remote_fs $syslog $time
+# Required-Stop:        $remote_fs $syslog $time
+# Should-Start:         $network $named slapd autofs ypbind nscd nslcd winbind sssd
+# Should-Stop:          $network $named slapd autofs ypbind nscd nslcd winbind sssd
+# Default-Start:        2 3 4 5
+# Default-Stop:
 #
 ### END INIT INFO
 
