@@ -37,7 +37,7 @@
 . /lib/lsb/init-functions
 
 PATH=/bin:/usr/bin:/sbin:/usr/sbin
-DAEMON=/opt/pbjengine/pbjengined
+DAEMON=/opt/pbjengine/bin/parallelWithEchoedJobCommands.sh
 NAME="pbjengined"
 DESC="Parallel Bash Jobs Engine can run commands in JOB FILES in parallel "
 SCRIPTNAME=/etc/init.d/"$NAME"
