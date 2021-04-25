@@ -43,9 +43,6 @@ do
 	then
 		sleep 1 # seconds
 		continue
-	else
-		echo $jobFileNames >> test-output
-		echo $jobFilePaths >> test-output
 	fi
 	echo -n $jobFilePaths |xargs -I{} chmod +x {} # set script files to executable
 
