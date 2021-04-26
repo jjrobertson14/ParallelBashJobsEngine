@@ -57,7 +57,7 @@ do
 		# Have parallel process commands sent as output from job scripts 
 		# (writing each command echoed by a job script file that fails to run successfully to command-error file, along with filename and datetimestamp)
 	cRunJobCommands_A="parallel -I___ --jobs ${simultaneousCommandsCount}"
-	cRunJobCommands_B='"bash -c ___ >>command-output 2>>command-error || echo [ERROR] ___ ===== $(echo {} |cut -d"/" -f3 |cut -d"." -f1) ===== $(date +%Y%m%d-%H:%M:%S.%s) >> command-error"'
+	cRunJobCommands_B='"bash -c ___ && echo [INFO] ___ ===== $(echo {} |cut -d"/" -f3 |cut -d"." -f1) ===== $(date +%Y%m%d-%H:%M:%S.%s) >>command-output || echo [ERROR] ___ ===== $(echo {} |cut -d"/" -f3 |cut -d"." -f1) ===== $(date +%Y%m%d-%H:%M:%S.%s) >> command-error"'
 	cRunJobCommands="( $cRunJobCommands_A $cRunJobCommands_B )"
 	# [ END COMMAND STRING COMPONENTS ]
 	
