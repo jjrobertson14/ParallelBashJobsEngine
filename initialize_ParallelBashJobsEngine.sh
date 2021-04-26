@@ -3,7 +3,7 @@
     # Copy files these files to it: 
         # cp -a pbjengined_initd /etc/init.d/pbjengined
         # cp -a scripts/parallelWithEchoedJobCommands.sh /opt/pbjengine/bin
-        # 
+        # cp -a scripts/start-pbjengined.sh /opt/pbjengine/bin
 
 # TODO get this directory to be created?... /etc/pbjengined
 # TODO create /etc/pbjengined.conf
@@ -17,4 +17,3 @@ cp pbjengined_initd /etc/init.d/pbjengined
 # [https://askubuntu.com/questions/1261213/how-to-write-an-init-script-that-will-execute-an-existing-start-script-in-ubuntu]
 # TODO update 'myservice' text here
 sudo update-rc.d myservice defaults
-
