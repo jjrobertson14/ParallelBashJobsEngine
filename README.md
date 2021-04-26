@@ -40,6 +40,11 @@
     - Then, all job script files that ran successfully with no error code are moved to archive/ directory
         - (with datetimestamp appended to filename)
 
+# HOW TO CREATE AND RUN SERVICE DAEMON
+- run initialize_ParallelBashJobsEngine.sh to create the daemon and copy files to /opt/pbjengine
+- interact with daemon by running 'service pbjengined (start|stop|restart|status)'
+- service daemon watches job queue in /opt/pbjengine, using the scripts/parallelJobEngine.sh file
+
 
 
 

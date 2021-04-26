@@ -1,4 +1,4 @@
 #!/bin/bash
 
 cd /opt/pbjengine/bin
-nohup ./parallelWithEchoedJobCommands.sh > ./parallelWithEchoedJobCommands.out &
+nohup ./parallelJobEngine.sh > ./parallelJobEngine.out &

@@ -32,9 +32,6 @@ An engine to run linux commands in parallel via GNU parallel.
 
 
 - [ DONE actually :3 it will run job script files as script via parallel, any output lines not starting with _-_-_COMMAND- token will not be ran as commands ]
-                    - [DEPRECATED]
-                        - [single job script to execute & command echoing scripts] 
-                            - Copy parallelWithEchoedJobCommands.sh to parallelBashJobsEngine.sh
-                            - Modify to Allow engine to accept both scripts that user desires to run and scripts that echo out commands to be run
+
 # Would be Cool To Have
 - ! (cool to have) [ expand lil interpreter ] Alow it to accept more tokens

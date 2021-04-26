@@ -3,7 +3,7 @@ cp -a pbjengined_initd /etc/init.d/pbjengined
 # Create directories: bin
 mkdir -p /opt/pbjengine/bin
 # Copy files these files to bin and set permissions: 
-cp -a scripts/parallelWithEchoedJobCommands.sh /opt/pbjengine/bin
+cp -a scripts/parallelJobEngine.sh /opt/pbjengine/bin
 cp -a scripts/start-pbjengined.sh /opt/pbjengine/bin
 chmod u+x /opt/pbjengine/bin/start-pbjengined.sh
 
