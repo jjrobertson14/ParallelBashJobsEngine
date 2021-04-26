@@ -7,7 +7,11 @@ cp -a scripts/parallelWithEchoedJobCommands.sh /opt/pbjengine/bin
 cp -a scripts/start-pbjengined.sh /opt/pbjengine/bin
 chmod u+x /opt/pbjengine/bin/start-pbjengined.sh
 
+# Install parallel if not installed
+dpkg-query -W parallel || apt-get -y install parallel
+
 # TODO create /etc/pbjengined.conf (or get this directory to be created?... /etc/pbjengined)
+
 
 # After creating the file run sudo update-rc.d myservice defaults to install your 
 # service (here referred as myservice). refer to update-rec.d, Then you can start 
