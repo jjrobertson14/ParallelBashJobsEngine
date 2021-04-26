@@ -6,7 +6,7 @@
 CORE_COUNT=$(getconf _NPROCESSORS_ONLN)
 
 # fields
-jobQueuePath="../jobqueue-for-jobs-that-echo-commands"
+jobQueuePath="../run-each-line-as-job-jobqueue"
 dateStampFmt="+%Y%m%d-%H:%M:%S.%s" # use like `date $dateStampFmt`
 
 # Read args
@@ -32,7 +32,7 @@ rm -f test-output test-error
 # trap "reset_n_test_echo_scripts 30;" SIGTERM SIGINT
 
 # Create directories
-mkdir -p ../archive ../error ../output ../input ../jobqueue ../jobqueue-for-jobs-that-echo-commands
+mkdir -p ../archive ../error ../output ../input ../jobqueue ../run-each-line-as-job-jobqueue
 
 while [ true ]
 do
