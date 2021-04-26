@@ -9,3 +9,4 @@ archive/
 error/
 jobqueue/
 jobqueue-for-jobs-that-echo-commands/
+run-standard-out-as-jobs-jobqueue/
