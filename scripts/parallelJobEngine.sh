@@ -48,25 +48,20 @@ do
 	fi
 	echo -n $jobFilePaths |xargs -I{} chmod +x {} # set script files to executable
 
+    # TODO: modify for runing each line as job
 	# [ BEGIN COMMAND STRING COMPONENTS ]
-		# Run job script and take output as commands to run via parallel
-		# (moving each file that fails to run successfully to error dir with a datetimestamp concatenated to it)
-	cGetCommandsFromJobScript='( bash {} || mv {} ../error/$(echo {} |cut -d"/" -f3 |cut -d"." -f1)_$(date +%Y%m%d-%H:%M:%S.%s) )'
-		# In order to allow only specified output of job scripts to be ran as command, 
-			# have token "_-_-_COMMAND-" be at start of output strings client wants to run as commands
-		# (To do this, grep to select text after token "_-_-_COMMAND-" if it appears at start of piped in string)
-	cGrepActualCommandsByToken='( grep -oP "(?<=^_-_-_COMMAND-).*" )'
 		# Have parallel process commands sent as output from job scripts 
 		# (writing each command echoed by a job script file that fails to run successfully to command-error file, along with filename and datetimestamp)
-	cRunJobCommands_A="parallel -I___ --jobs ${simultaneousCommandsCount}"
-	cRunJobCommands_B='"bash -c ___ >>command-output 2>>command-error && echo [INFO] ___ ===== $(echo {} |cut -d"/" -f3 |cut -d"." -f1) ===== $(date +%Y%m%d-%H:%M:%S.%s) >>command-output || echo [ERROR] ___ ===== $(echo {} |cut -d"/" -f3 |cut -d"." -f1) ===== $(date +%Y%m%d-%H:%M:%S.%s) >> command-error"'
-	cRunJobCommands="( $cRunJobCommands_A $cRunJobCommands_B )"
+	# cRunJobCommands_A="parallel -I___ --jobs ${simultaneousCommandsCount}"
+	# cRunJobCommands_B='"bash -c ___ >>command-output 2>>command-error && echo [INFO] ___ ===== $(echo {} |cut -d"/" -f3 |cut -d"." -f1) ===== $(date +%Y%m%d-%H:%M:%S.%s) >>command-output || echo [ERROR] ___ ===== $(echo {} |cut -d"/" -f3 |cut -d"." -f1) ===== $(date +%Y%m%d-%H:%M:%S.%s) >> command-error"'
+	# cRunJobCommands="( $cRunJobCommands_A $cRunJobCommands_B )"
 	# [ END COMMAND STRING COMPONENTS ]
 	
 	# [RUN PARALLEL] 
 	# Pass each job to parallel process that runs subcommands
+    # TODO parallel to cat the files and run each line as a JOB
 	echo -n $jobFilePaths | parallel --jobs ${simultaneousFilesCount} -d " " --no-run-if-empty \
-		"${cGetCommandsFromJobScript} | ${cGrepActualCommandsByToken} | ${cRunJobCommands}"
+		"${cGetCommandsFromJobScript} | ${cRunJobCommands}"
 	
 	# [ARCHIVE]
 	for jobfilename in $jobFileNames
