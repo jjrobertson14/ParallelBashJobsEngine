@@ -48,8 +48,12 @@ do
 	fi
 	echo -n $jobFilePaths |xargs -I{} chmod +x {} # set script files to executable
 
-    # TODO: modify for runing each line as job
 	# [ BEGIN COMMAND STRING COMPONENTS ]
+    # TODO: modify for runing each line as job (cat each file)
+		# Run job script and take output as commands to run via parallel
+		# (moving each file that fails to run successfully to error dir with a datetimestamp concatenated to it)
+	# cGetCommandsFromJobScript='( bash {} || mv {} ../error/$(echo {} |cut -d"/" -f3 |cut -d"." -f1)_$(date +%Y%m%d-%H:%M:%S.%s) )'
+    # TODO: modify for runing each line from catted file as job
 		# Have parallel process commands sent as output from job scripts 
 		# (writing each command echoed by a job script file that fails to run successfully to command-error file, along with filename and datetimestamp)
 	# cRunJobCommands_A="parallel -I___ --jobs ${simultaneousCommandsCount}"
@@ -58,8 +62,7 @@ do
 	# [ END COMMAND STRING COMPONENTS ]
 	
 	# [RUN PARALLEL] 
-	# Pass each job to parallel process that runs subcommands
-    # TODO parallel to cat the files and run each line as a JOB
+	# Pass content of each file containing a JOB on each line to a parallel process that runs each JOB
 	echo -n $jobFilePaths | parallel --jobs ${simultaneousFilesCount} -d " " --no-run-if-empty \
 		"${cGetCommandsFromJobScript} | ${cRunJobCommands}"
 	
