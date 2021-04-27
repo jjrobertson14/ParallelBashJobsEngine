@@ -1,5 +1,3 @@
-# TODO [#4] Implement: user should drop txt file containing commands one per line to jobs folder
-
 #!/bin/bash
 
 # Constants
@@ -52,14 +50,13 @@ do
 		# cat JOB FILE to send the file content as commands to stdout (to laterrun via parallel)
 		# (moving each file that fails to run successfully to error dir with a datetimestamp concatenated to it)
 	cGetCommandsFromJobScript='( cat {} || mv {} ../error/$(echo {} |cut -d"/" -f3 |cut -d"." -f1)_$(date +%Y%m%d-%H:%M:%S.%s) )'
-    # TODO: modify for runing each line from catted file as job
 		# Have parallel process commands sent from JOB FILEs
 		# (writing each command echoed by a job script file that fails to run successfully to command-error file, along with filename and datetimestamp)
 	cRunJobCommands_A="parallel -I___ --jobs ${simultaneousCommandsCount}"
     # 
-    cRunJobCommands_B='"bash -c ___ >>command-output 2>>command-error'
-    cRunJobCommands_B_success=' && echo  [INFO] ___ ===== $(echo {} |cut -d"/" -f3 |cut -d"." -f1) ===== $(date +%Y%m%d-%H:%M:%S.%s) >>command-output'
-    cRunJobCommands_B_failure=' || echo [ERROR] ___ ===== $(echo {} |cut -d"/" -f3 |cut -d"." -f1) ===== $(date +%Y%m%d-%H:%M:%S.%s) >> command-error"'
+    cRunJobCommands_B='"bash -c ___ >>../command-output 2>>../command-error'
+    cRunJobCommands_B_success=' && echo  [INFO] ___ ===== $(echo {} |cut -d"/" -f3 |cut -d"." -f1) ===== $(date +%Y%m%d-%H:%M:%S.%s) >>../command-output'
+    cRunJobCommands_B_failure=' || echo [ERROR] ___ ===== $(echo {} |cut -d"/" -f3 |cut -d"." -f1) ===== $(date +%Y%m%d-%H:%M:%S.%s) >>../command-error"'
 	cRunJobCommands="( $cRunJobCommands_A $cRunJobCommands_B $cRunJobCommands_B_success $cRunJobCommands_B_failure )"
 	# [ END COMMAND STRING COMPONENTS ]
 	
