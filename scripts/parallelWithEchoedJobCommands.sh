@@ -30,7 +30,7 @@ rm -f test-output test-error
 # trap "reset_n_test_echo_scripts 30;" SIGTERM SIGINT
 
 # Create directories
-mkdir -p ../archive ../error ../output ../input ../jobqueue ../run-standard-out-as-jobs-jobqueue
+mkdir -p ../archive ../error ../output ../input ../run-standard-out-as-jobs-jobqueue
 
 while [ true ]
 do

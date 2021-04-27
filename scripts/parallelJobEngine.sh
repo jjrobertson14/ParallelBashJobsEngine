@@ -32,7 +32,7 @@ rm -f test-output test-error
 # trap "reset_n_test_echo_scripts 30;" SIGTERM SIGINT
 
 # Create directories
-mkdir -p ../archive ../error ../output ../input ../jobqueue ../run-each-line-as-job-jobqueue
+mkdir -p ../archive ../error ../output ../input ../run-each-line-as-job-jobqueue
 
 while [ true ]
 do
@@ -49,20 +49,22 @@ do
 	echo -n $jobFilePaths |xargs -I{} chmod +x {} # set script files to executable
 
 	# [ BEGIN COMMAND STRING COMPONENTS ]
-    # TODO: modify for runing each line as job (cat each file)
-		# Run job script and take output as commands to run via parallel
+		# cat JOB FILE to send the file content as commands to stdout (to laterrun via parallel)
 		# (moving each file that fails to run successfully to error dir with a datetimestamp concatenated to it)
-	# cGetCommandsFromJobScript='( bash {} || mv {} ../error/$(echo {} |cut -d"/" -f3 |cut -d"." -f1)_$(date +%Y%m%d-%H:%M:%S.%s) )'
+	cGetCommandsFromJobScript='( cat {} || mv {} ../error/$(echo {} |cut -d"/" -f3 |cut -d"." -f1)_$(date +%Y%m%d-%H:%M:%S.%s) )'
     # TODO: modify for runing each line from catted file as job
-		# Have parallel process commands sent as output from job scripts 
+		# Have parallel process commands sent from JOB FILEs
 		# (writing each command echoed by a job script file that fails to run successfully to command-error file, along with filename and datetimestamp)
-	# cRunJobCommands_A="parallel -I___ --jobs ${simultaneousCommandsCount}"
-	# cRunJobCommands_B='"bash -c ___ >>command-output 2>>command-error && echo [INFO] ___ ===== $(echo {} |cut -d"/" -f3 |cut -d"." -f1) ===== $(date +%Y%m%d-%H:%M:%S.%s) >>command-output || echo [ERROR] ___ ===== $(echo {} |cut -d"/" -f3 |cut -d"." -f1) ===== $(date +%Y%m%d-%H:%M:%S.%s) >> command-error"'
-	# cRunJobCommands="( $cRunJobCommands_A $cRunJobCommands_B )"
+	cRunJobCommands_A="parallel -I___ --jobs ${simultaneousCommandsCount}"
+    # 
+    cRunJobCommands_B='"bash -c ___ >>command-output 2>>command-error'
+    cRunJobCommands_B_success=' && echo  [INFO] ___ ===== $(echo {} |cut -d"/" -f3 |cut -d"." -f1) ===== $(date +%Y%m%d-%H:%M:%S.%s) >>command-output'
+    cRunJobCommands_B_failure=' || echo [ERROR] ___ ===== $(echo {} |cut -d"/" -f3 |cut -d"." -f1) ===== $(date +%Y%m%d-%H:%M:%S.%s) >> command-error"'
+	cRunJobCommands="( $cRunJobCommands_A $cRunJobCommands_B $cRunJobCommands_B_success $cRunJobCommands_B_failure )"
 	# [ END COMMAND STRING COMPONENTS ]
 	
 	# [RUN PARALLEL] 
-	# Pass content of each file containing a JOB on each line to a parallel process that runs each JOB
+	# Pass content of each JOB FILE containing JOBs to run on each line to a parallel process that runs each JOB
 	echo -n $jobFilePaths | parallel --jobs ${simultaneousFilesCount} -d " " --no-run-if-empty \
 		"${cGetCommandsFromJobScript} | ${cRunJobCommands}"
 	
