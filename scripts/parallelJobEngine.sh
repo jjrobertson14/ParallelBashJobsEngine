@@ -10,16 +10,16 @@ jobQueuePath="../run-each-line-as-job-jobqueue"
 dateStampFmt="+%Y%m%d-%H:%M:%S.%s" # use like `date $dateStampFmt`
 
 # Read args
-if [ -z $1 ] # 0 arguments passed
+if [ -z $1 ] # 0 arguments have been passed
 then
 	simultaneousFilesCount=$(if [ $CORE_COUNT -ge 1 ]; then  echo 2; else echo 1; fi) # 2, if 2 are available
 	simultaneousCommandsCount=$CORE_COUNT
-elif [ -z $2 ] # 1 argument passed
+elif [ -z $2 ] || [ -n $3 ]  # 1 or 3+ arguments have been passed
 then
 	echo "provide [simultaneousFilesCount, of cpu cores to process job files with] [simultaneousCommandsCount, of cpu cores to process commands from job files]"
 	echo "example: parallel 2 6"
 	exit 1
-else # at least 2 arguments passed
+else # 2 arguments passed
 	simultaneousFilesCount=$1
 	simultaneousCommandsCount=$2
 fi
