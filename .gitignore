@@ -1,10 +1,13 @@
 test-output
 test-error
 scripts/output
+output
 input/
 output/
 scripts/command-output
+command-output
 scripts/command-error
+command-error
 archive/
 error/
 jobqueue/
