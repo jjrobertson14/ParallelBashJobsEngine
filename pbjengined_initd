@@ -37,20 +37,23 @@
 . /lib/lsb/init-functions
 
 PATH=/bin:/usr/bin:/sbin:/usr/sbin
-DAEMON=/opt/pbjengine/bin/start-pbjengined.sh
+DAEMON=/opt/pbjengine/bin/pbjengined.sh
 NAME="pbjengined"
 DESC="Parallel Bash Jobs Engine can run commands in JOB FILES in parallel "
 SCRIPTNAME=/etc/init.d/"$NAME"
 PBJENGINE_HOST=`hostname`
 PIDFILE=/var/run/pbjengined.pid
 
+# Read /etc/pbjengined.conf
 if [ -f /etc/pbjengined.conf ]; then
         . /etc/pbjengined.conf
 fi
 
-test -f $DAEMON || exit 0
+# [Set params from /etc/pbjengined.conf] set params with values of vars from /etc/pbjengined.conf
+EXTRA_OPTS=${PBJENGINE_SCRIPT}
 
-. /lib/lsb/init-functions
+# Test that the daemon file exists
+test -f $DAEMON || exit 0
 
 #===============================================================================
 case "$1" in
