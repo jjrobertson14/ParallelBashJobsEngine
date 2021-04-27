@@ -1,5 +1,5 @@
-test-output
-test-error
+scripts/test-output
+scripts/test-error
 scripts/output
 output
 input/
