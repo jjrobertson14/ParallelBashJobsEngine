@@ -12,6 +12,7 @@
     - run openssl command in scripts/snippets/create-random-content-file.md
 
 ## For JOB FILE type (1) a txt file containing commands one per line
+- First, make sure you have set PBJENGINE_SCRIPT accordingly in /etc/pbjengined.conf (to arallelJobEngine.sh at time of writing)
 - The parallel bash jobs engine script that can process these files is scripts/parallelJobEngine.sh
     - run 'bash [path of parallelJobEngine.sh] > [output file path]' to start the engine
     - then copy jobs from ./jobs directory to run-each-line-as-job-jobqueue (if running parallelJobEngine.sh)
@@ -19,6 +20,7 @@
 
 ## For JOB FILE type (2) a script to run as a whole
 ## (where each line of stdout that is marked as a command with a prefix of '_-_-_COMMAND' is run in parallel)
+- First, make sure you have set PBJENGINE_SCRIPT accordingly in /etc/pbjengined.conf (to parallelWithEchoedJobCommands.sh at time of writing)
 - The parallel bash jobs engine script that can process these files is scripts/parallelWithEchoedJobCommands.sh
     - run 'bash [path of parallelWithEchoedJobCommands.sh] > [output file path]' to start the engine
         - Sample JOB FILES you may use (that utilize sample.txt file you generated with openssl):
@@ -37,6 +39,7 @@
 
 # HOW TO USE
 ## (For JOB FILE type (1) a txt file containing commands one per line)
+- First, make sure you have set PBJENGINE_SCRIPT accordingly in /etc/pbjengined.conf (to arallelJobEngine.sh at time of writing)
 - run scripts/parallelJobEngine.sh (for example, like `bash scripts/parallelJobEngine.sh > output`)
     - [NOTE] run scripts/parallelJobEngine.sh --help to learn about what arguments you may pass 
         - (they set core count parameters)
@@ -56,7 +59,10 @@
 # HOW TO CREATE AND RUN SERVICE DAEMON
 - Run initialize_ParallelBashJobsEngine.sh to create the daemon and copy files to /opt/pbjengine
 - Interact with daemon by running 'service pbjengined (start|stop|restart|status)'
-- The service daemon watches job queue in /opt/pbjengine, and keeps the scripts/parallelJobEngine.sh file running
+- The service daemon watches job queue in /opt/pbjengine, and keeps the scripts/parallelJobEngine.sh or scripts/parallelWithEchoedJobCommands.sh file running
+
+- Configuration is stored in /etc/pbjengined.conf.
+    - Includes PBJENGINE_SCRIPT property, which determines how the Parallel Bash Jobs Engine processes job files.
 
 
 
